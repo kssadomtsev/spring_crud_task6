@@ -2,6 +2,7 @@ package ru.onyxone.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.onyxone.dao.UserDao;
 import ru.onyxone.models.User;
 
@@ -18,6 +19,7 @@ public class UserManagerImpl implements UserManager {
         this.userDao = userDao;
     }
 
+    @Transactional
     @Override
     public User get(int id) {
         Optional<User> user = userDao.get(id);
@@ -25,21 +27,25 @@ public class UserManagerImpl implements UserManager {
                 -> new User("non-existing user", "", ""));
     }
 
+    @Transactional
     @Override
     public List<User> getAll() {
         return userDao.getAll();
     }
 
+    @Transactional
     @Override
     public void update(User updatedUser) {
         userDao.update(updatedUser);
     }
 
+    @Transactional
     @Override
     public void create(User user) {
         userDao.create(user);
     }
 
+    @Transactional
     @Override
     public void delete(int id) {
         userDao.delete(id);

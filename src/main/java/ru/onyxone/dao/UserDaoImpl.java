@@ -20,7 +20,6 @@ public class UserDaoImpl implements UserDao {
     public UserDaoImpl() {
     }
 
-    @Transactional
     @Override
     public Optional<User> get(int id) {
         return entityManager
@@ -32,7 +31,6 @@ public class UserDaoImpl implements UserDao {
                 .findFirst();
     }
 
-    @Transactional
     @Override
     public List<User> getAll() {
         return entityManager
@@ -40,20 +38,17 @@ public class UserDaoImpl implements UserDao {
                 .getResultList();
     }
 
-    @Transactional
     @Override
     public void update(User updatedUser) {
         entityManager.merge(updatedUser);
     }
 
-    @Transactional
     @Override
     public void create(User user) {
         entityManager.persist(user);
 
     }
 
-    @Transactional
     @Override
     public void delete(int id) {
         User details = get(id).orElseThrow(() -> new JpaException("User not found!"));
