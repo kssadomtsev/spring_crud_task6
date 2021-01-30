@@ -24,7 +24,7 @@ public class UserManagerImpl implements UserManager {
     public User get(int id) {
         Optional<User> user = userDao.get(id);
         return user.orElseGet(()
-                -> new User("non-existing user", "", ""));
+                -> new User("non-existing user", "", "",""));
     }
 
     @Transactional
