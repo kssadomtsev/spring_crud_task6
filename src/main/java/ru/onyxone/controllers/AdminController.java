@@ -8,30 +8,30 @@ import ru.onyxone.models.User;
 import ru.onyxone.services.UserManager;
 
 @Controller
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/admin")
+public class AdminController {
     private final UserManager userManager;
 
     @Autowired
-    public UserController(UserManager userManager) {
+    public AdminController(UserManager userManager) {
         this.userManager = userManager;
     }
 
     @GetMapping
     public String index(Model model) {
         model.addAttribute("users", userManager.getAll());
-        return "users/index";
+        return "admin/index";
     }
 
     @GetMapping("/{id}")
     public String get(@PathVariable("id") int id, Model model) {
         model.addAttribute("user", userManager.get(id));
-        return "users/get";
+        return "admin/get";
     }
 
     @GetMapping("/new")
     public String newUser(@ModelAttribute("user") User user) {
-        return "users/new";
+        return "admin/new";
     }
 
     @PostMapping

@@ -15,4 +15,6 @@ public interface UserDao {
     public void create(User user);
 
     public void delete(int id);
+
+    public Optional<User> getByEmail(String email);
 }

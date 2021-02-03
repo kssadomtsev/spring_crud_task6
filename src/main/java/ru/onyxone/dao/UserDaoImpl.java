@@ -4,18 +4,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.onyxone.exception.JpaException;
+import ru.onyxone.models.Role;
 import ru.onyxone.models.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public class UserDaoImpl implements UserDao {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    {
+        create(new User("Admin","Adminov","admin@mail.com","adminPassword", Set.of(Role.ADMIN_ROLE, Role.USER_ROLE)));
+        create(new User("Admin","Adminov","admin@mail.com","adminPassword", Set.of(Role.ADMIN_ROLE, Role.USER_ROLE)));
+    }
 
     public UserDaoImpl() {
     }
@@ -53,5 +60,16 @@ public class UserDaoImpl implements UserDao {
     public void delete(int id) {
         User details = get(id).orElseThrow(() -> new JpaException("User not found!"));
         entityManager.remove(details);
+    }
+
+    @Override
+    public Optional<User> getByEmail(String email) {
+        return entityManager
+                .createQuery("SELECT u FROM User u WHERE u.email =:email", User.class)
+                .setParameter("email", email)
+                .setMaxResults(1)
+                .getResultList()
+                .stream()
+                .findFirst();
     }
 }
