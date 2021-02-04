@@ -4,12 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.onyxone.dao.UserDao;
+import ru.onyxone.models.Role;
 import ru.onyxone.models.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
+@Transactional
 public class UserManagerImpl implements UserManager {
 
     private UserDao userDao;
@@ -17,6 +20,13 @@ public class UserManagerImpl implements UserManager {
     @Autowired
     public UserManagerImpl(UserDao userDao) {
         this.userDao = userDao;
+        init();
+    }
+
+    @Transactional
+    public void init(){
+        create(new User("Admin", "Adminov", "admin@mail.com", "adminPassword", Set.of(Role.ADMIN_ROLE, Role.USER_ROLE)));
+        create(new User("User", "Userov", "user@mail.com", "userPassword", Set.of(Role.USER_ROLE)));
     }
 
     @Transactional

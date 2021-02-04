@@ -19,11 +19,6 @@ public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    {
-        create(new User("Admin","Adminov","admin@mail.com","adminPassword", Set.of(Role.ADMIN_ROLE, Role.USER_ROLE)));
-        create(new User("Admin","Adminov","admin@mail.com","adminPassword", Set.of(Role.ADMIN_ROLE, Role.USER_ROLE)));
-    }
-
     public UserDaoImpl() {
     }
 

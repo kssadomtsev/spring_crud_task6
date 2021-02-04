@@ -14,7 +14,8 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@ComponentScan(basePackages = { "ru.onyxone" },
+@ComponentScan
+        (basePackages = { "ru.onyxone" },
         excludeFilters = { @ComponentScan.Filter(type = FilterType.ANNOTATION, value = Configuration.class) })
 @PropertySource("classpath:db.properties")
 @EnableTransactionManagement
