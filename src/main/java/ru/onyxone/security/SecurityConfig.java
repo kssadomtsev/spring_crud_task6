@@ -32,22 +32,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        http
+                .formLogin()
+                .successHandler(successUserHandler)
+                .permitAll();
+
+        http.logout()
+                .permitAll()
+                .logoutSuccessUrl("/login");
+
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/auth/login")
-                .permitAll()
-                .successHandler(successUserHandler);
+                .antMatchers("/", "/login","/registration").permitAll()
+                .antMatchers("/admin/**").hasAuthority("ADMIN")
+                .antMatchers("/user/**").hasAuthority("USER");
     }
-
-//    @Bean
-//    protected PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder(12);
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

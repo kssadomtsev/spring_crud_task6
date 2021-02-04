@@ -66,4 +66,10 @@ public class UserManagerImpl implements UserManager {
     public void createRole(Role role) {
         roleDao.create(role);
     }
+
+    @Transactional
+    @Override
+    public Optional<User> getByEmail(String email) {
+        return userDao.getByEmail(email);
+    }
 }

@@ -20,4 +20,6 @@ public interface UserManager {
     public Optional<Role> getRoleByName(String name);
 
     public void createRole(Role role);
+
+    public Optional<User> getByEmail(String email);
 }

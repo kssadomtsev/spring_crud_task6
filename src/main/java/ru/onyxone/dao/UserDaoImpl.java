@@ -38,7 +38,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void update(User updatedUser) {
-        entityManager.merge(updatedUser);
+        int id = Math.toIntExact(updatedUser.getId());
+        User currentUser = get(id).get();
+        currentUser.setFirstName(updatedUser.getFirstName());
+        currentUser.setLastName(updatedUser.getLastName());
+        currentUser.setEmail(updatedUser.getEmail());
+        entityManager.persist(currentUser);
     }
 
     @Override
