@@ -3,30 +3,24 @@ package ru.onyxone.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.onyxone.dao.RoleDao;
 import ru.onyxone.dao.UserDao;
 import ru.onyxone.models.Role;
 import ru.onyxone.models.User;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
-@Transactional
 public class UserManagerImpl implements UserManager {
 
     private UserDao userDao;
+    private RoleDao roleDao;
 
     @Autowired
-    public UserManagerImpl(UserDao userDao) {
+    public UserManagerImpl(UserDao userDao, RoleDao roleDao) {
         this.userDao = userDao;
-        init();
-    }
-
-    @Transactional
-    public void init(){
-        create(new User("Admin", "Adminov", "admin@mail.com", "adminPassword", Set.of(Role.ADMIN_ROLE, Role.USER_ROLE)));
-        create(new User("User", "Userov", "user@mail.com", "userPassword", Set.of(Role.USER_ROLE)));
+        this.roleDao = roleDao;
     }
 
     @Transactional
@@ -34,7 +28,7 @@ public class UserManagerImpl implements UserManager {
     public User get(int id) {
         Optional<User> user = userDao.get(id);
         return user.orElseGet(()
-                -> new User("non-existing user", "", "",""));
+                -> new User("non-existing user", "", "", ""));
     }
 
     @Transactional
@@ -59,5 +53,17 @@ public class UserManagerImpl implements UserManager {
     @Override
     public void delete(int id) {
         userDao.delete(id);
+    }
+
+    @Transactional
+    @Override
+    public Optional<Role> getRoleByName(String name) {
+        return roleDao.get(name);
+    }
+
+    @Transactional
+    @Override
+    public void createRole(Role role) {
+        roleDao.create(role);
     }
 }

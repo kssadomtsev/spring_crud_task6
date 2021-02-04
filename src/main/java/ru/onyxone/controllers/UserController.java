@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.onyxone.models.User;
 import ru.onyxone.services.UserManager;
 
+
 @Controller
 @RequestMapping("/user")
 public class UserController {

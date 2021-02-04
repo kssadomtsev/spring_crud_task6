@@ -1,17 +1,13 @@
 package ru.onyxone.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.onyxone.exception.JpaException;
-import ru.onyxone.models.Role;
 import ru.onyxone.models.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -48,7 +44,6 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void create(User user) {
         entityManager.persist(user);
-
     }
 
     @Override
