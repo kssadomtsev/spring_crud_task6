@@ -1,6 +1,8 @@
 package ru.onyxone;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.onyxone.models.User;
@@ -9,7 +11,7 @@ import ru.onyxone.utils.Util;
 
 
 @Component
-public class DataInit {
+public class DataInit implements ApplicationRunner {
     private final PasswordEncoder passwordEncoder;
     private final UserManager userManager;
 
@@ -17,7 +19,10 @@ public class DataInit {
     public DataInit(UserManager userManager, PasswordEncoder passwordEncoder) {
         this.userManager = userManager;
         this.passwordEncoder = passwordEncoder;
+    }
 
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
         User admin = new User("Admin", "Adminov", "admin@mail.com", passwordEncoder.encode("admin"));
         admin.setRoles(Util.getRoles(new String[]{"ADMIN", "USER"}, userManager));
         this.userManager.create(admin);
