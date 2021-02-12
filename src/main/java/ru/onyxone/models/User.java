@@ -1,7 +1,11 @@
 package ru.onyxone.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 
 @Entity
 @Table(name = "users")
@@ -12,15 +16,20 @@ public class User {
     private int id;
 
     @Column(name = "name")
+    @NotBlank(message = "Please provide your first name")
     private String firstName;
 
     @Column(name = "last_name")
+    @NotBlank(message = "Please provide your last name")
     private String lastName;
 
     @Column(name = "email")
+    @Email(message = "Please provide a valid e-mail")
+    @NotBlank(message = "Please provide an e-mail")
     private String email;
 
     @Column(name = "password")
+    @NotBlank(message = "Password can not be empty")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -89,6 +98,10 @@ public class User {
 
     public Set<Role> getRoles() {
         return roles;
+    }
+
+    public String printRoles(){
+        return String.join(" ", roles.stream().map(Role::toString).collect(Collectors.toSet()));
     }
 
     public void setRoles(Set<Role> roles) {

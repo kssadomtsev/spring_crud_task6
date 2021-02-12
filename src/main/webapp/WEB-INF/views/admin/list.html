@@ -1,34 +1,199 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8">
-    <title>Users</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <title>Admin panel</title>
 </head>
 <body>
 
-<table border="1">
-    <tr>
-        <th>First name</th>
-        <th>Last name</th>
-        <th>Email</th>
-        <th>Edit</th>
-    </tr>
+<nav class="navbar navbar-dark p-0 bg-dark">
+    <form class="form-inline">
+        <div class="container-fluid">
+            <div class="text-white">
+                <strong th:utext="${currentUser.getEmail()}"></strong>
+                with roles:
+                <span th:utext="${currentUser.printRoles()}"></span>
+            </div>
+        </div>
+    </form>
+    <form class="form-inline" th:action="@{/logout}" method="get">
+        <input class="btn btn-outline-secondary" type="submit" value="Logout">
+    </form>
+</nav>
 
-    <tr th:each="user : ${users}">
+<div class="row" style="padding: 15px">
+    <div class="col-2 bg-light">
+        <div class="nav flex-column nav-pills vh-100" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            <a class="nav-link active" id="v-pills-admin-tab" data-toggle="pill" href="#v-pills-UserTable" role="tab"
+               aria-selected="true" sec:authorize="hasRole('ROLE_USER')">Admin</a>
+            <a class="nav-link" id="v-pills-user-tab" data-toggle="pill" href="#v-pills-User" role="tab"
+               aria-selected="false">User</a>
+        </div>
+    </div>
 
-        <td><a th:href="@{/admin/{id}(id=${user.getId()})}" th:utext="${user.getFirstName()}">First Name</a></td>
-        <td th:utext="${user.getLastName()}">Last Name</td>
-        <td th:utext="${user.getEmail()}">Email</td>
-        <td><a th:href="@{/admin/{id}/edit(id=${user.getId()})}">Edit</a></td>
+    <div class="col-10 bg-white">
+        <div class="tab-content" id="v-pills-tabContent vh-100">
+            <div class="tab-pane fade show active" id="v-pills-UserTable" role="tabpanel">
 
-    </tr>
+                <h1 style="padding: 10px 0">Admin Panel</h1>
 
-</table>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#usersTable" id="navAllUsers">Users
+                            table</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#newUser" id="navNewUser">New User</a>
+                    </li>
+                </ul>
 
-<br/>
-<hr/>
 
-<a href="/admin/new">Create new user</a>
+                <div class="tab-content">
+                    <!--Retrive user list-->
+                    <div class="tab-pane show active" id="usersTable">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>All Users</h5>
+                            </div>
+                            <div class="card-block">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each ="user : ${users}">
+                                        <td th:text="${user.getId()}"></td>
+                                        <td th:text ="${user.getFirstName()}"></td>
+                                        <td th:text ="${user.getLastName()}"></td>
+                                        <td th:text ="${user.getEmail()}"></td>
+                                        <td th:text ="${user.printRoles()}"></td>
+                                        <td>
+                                            <a th:href="@{/admin/{id}/edit(id=${user.getId()})}" class="btn btn-primary eBtn">Edit</a>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/admin/{id}/edit(id=${user.getId()})}" class="btn btn-danger delBtn">Delete</a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Add new user form-->
+                    <div class="tab-pane" id="newUser">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Add new user</h5>
+                            </div>
+                            <div class="card-block row justify-content-center">
+                                <form class="form-horizontal" method="post" th:action="@{/admin}" th:object="${newUser}">
+                                    <div class="form-group">
+                                        <label for="first_name" class="cols-sm-2 control-label">First name</label>
+                                        <div class="cols-sm-10">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                                                <input type="text" class="form-control" th:field="*{firstName}" id="first_name" placeholder="Enter your Name" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="last_name" class="cols-sm-2 control-label">Last name</label>
+                                        <div class="cols-sm-10">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                                                <input type="text" class="form-control" th:field="*{lastName}" id="last_name" placeholder="Enter your Name" />
+                                            </div>
+                                        </div>
+                                    </div>
 
+                                    <div class="form-group">
+                                        <label for="password" class="cols-sm-2 control-label">Password</label>
+                                        <div class="cols-sm-10">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                                                <input type="password" class="form-control" name="password" id="password" placeholder="Enter your Password" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="confirm" class="cols-sm-2 control-label">Confirm Password</label>
+                                        <div class="cols-sm-10">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+                                                <input type="password" class="form-control" name="confirm" id="confirm" placeholder="Confirm your Password" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group ">
+                                        <button type="button" class="btn btn-primary btn-lg btn-block login-button">Register</button>
+                                    </div>
+
+                                </form>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="tab-pane fade" id="v-pills-User" role="tabpanel">
+                <h1 style="padding: 10px">User information-page</h1>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!--<table border="1">-->
+<!--    <tr>-->
+<!--        <th>First name</th>-->
+<!--        <th>Last name</th>-->
+<!--        <th>Email</th>-->
+<!--        <th>Edit</th>-->
+<!--    </tr>-->
+
+<!--    <tr th:each="user : ${users}">-->
+
+<!--        <td><a th:href="@{/admin/{id}(id=${user.getId()})}" th:utext="${user.getFirstName()}">First Name</a></td>-->
+<!--        <td th:utext="${user.getLastName()}">Last Name</td>-->
+<!--        <td th:utext="${user.getEmail()}">Email</td>-->
+<!--        <td><a th:href="@{/admin/{id}/edit(id=${user.getId()})}">Edit</a></td>-->
+
+<!--    </tr>-->
+
+<!--</table>-->
+
+<!--<br/>-->
+<!--<hr/>-->
+
+<!--<a href="/admin/new">Create new user</a>-->
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+        crossorigin="anonymous"></script>
 </body>
 </html>
