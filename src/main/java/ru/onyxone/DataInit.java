@@ -24,11 +24,11 @@ public class DataInit implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         User admin = new User("Admin", "Adminov", "admin@mail.com", passwordEncoder.encode("admin"));
-        admin.setRoles(Util.getRoles(new String[]{"ADMIN", "USER"}, userManager));
+        admin.setRoles(Util.getRolesByString(new String[]{"ADMIN", "USER"}, userManager));
         this.userManager.create(admin);
 
         User user = new User("User", "Userov", "user@mail.com", passwordEncoder.encode("user"));
-        user.setRoles(Util.getRoles(new String[]{"USER"}, userManager));
+        user.setRoles(Util.getRolesByString(new String[]{"USER"}, userManager));
         this.userManager.create(user);
     }
 }

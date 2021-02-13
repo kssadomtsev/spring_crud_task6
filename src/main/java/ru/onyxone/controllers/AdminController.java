@@ -7,9 +7,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.onyxone.models.Role;
 import ru.onyxone.models.User;
 import ru.onyxone.services.UserManager;
 import ru.onyxone.utils.Util;
+
+import java.util.Set;
 
 @Controller
 @RequestMapping("/admin")
@@ -39,22 +42,22 @@ public class AdminController {
         return "admin/get";
     }
 
-    @GetMapping("/new")
-    public String newUser(@ModelAttribute("user") User user) {
-        return "admin/new";
-    }
+//    @GetMapping("/new")
+//    public String newUser(@ModelAttribute("user") User user) {
+//        return "admin/new";
+//    }
 
     @PostMapping
     public String create(@ModelAttribute("user") User user, Model model) {
         if (userManager.getByEmail(user.getEmail()).isEmpty()) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setRoles(Util.getRoles(new String[]{"USER"}, userManager));
+            user.setRoles(Util.getRolesByRoleObj(user.getRoles(), userManager));
+            //user.setRoles(Util.getRoles(new String[]{"USER"}, userManager));
             userManager.create(user);
-            return "redirect:/admin";
         } else {
             model.addAttribute("message", "Email is already used");
-            return "admin/new";
         }
+        return "redirect:/admin";
     }
 
     @GetMapping("/{id}/edit")

@@ -38,7 +38,7 @@ public class RootController {
         boolean isUserExisting = userManager.getByEmail(user.getEmail()).isPresent();
         if (userManager.getByEmail(user.getEmail()).isEmpty()) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setRoles(Util.getRoles(new String[]{"USER"}, userManager));
+            user.setRoles(Util.getRolesByString(new String[]{"USER"}, userManager));
             userManager.create(user);
             return "redirect:/login";
         } else {
