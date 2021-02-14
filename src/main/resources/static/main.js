@@ -6,7 +6,14 @@ $(document).ready(function(){
         const dataTarget = $(this).attr('data-target');
         console.log(data)
         console.log(dataTarget)
-        $('#deleteModal').modal();
+        const modal = document.getElementById(dataTarget.substring(1))
+        console.log(modal)
+        // $("."+dataTarget.substring(1) +" #deleteId").val(data.id);
+        // $("."+dataTarget.substring(1) +" #deleteUsername").val(data.firstName);
+        // $("."+dataTarget.substring(1) +" #deleteLastname").val(data.lastName);
+        // $("."+dataTarget.substring(1) +" #deleteEmail").val(data.email);
+        // $("."+dataTarget.substring(1) +" #deleteRoles").val(data.role);
+        // $(dataTarget).modal();
     //     var text = $(this).text();
     //     //for update user
     //     if (text == 'Edit') {
